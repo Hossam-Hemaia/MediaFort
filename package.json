@@ -1,0 +1,24 @@
+{
+  "name": "mediafort",
+  "version": "1.0.0",
+  "description": "media player for protecting content",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "dev": "nodemon --exec electron .",
+    "postinstall": "install-app-deps",
+    "electron-build": "electron-builder"
+  },
+  "author": "Hossam Hemaia",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^31.3.0",
+    "electron-builder": "^24.13.3",
+    "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "sqlite3": "^5.1.6"
+  }
+}
