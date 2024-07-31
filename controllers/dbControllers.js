@@ -118,3 +118,100 @@ exports.getConfigData = async () => {
 };
 
 /***********************************************************/
+
+exports.createActivationTable = () => {
+  db.serialize(() => {
+    try {
+      db.run(`CREATE TABLE IF NOT EXISTS active (
+        code TEXT,
+        isActive INTEGER,
+        expiryDate TEXT
+      )`);
+    } catch (err) {
+      throw err;
+    }
+  });
+};
+
+exports.isActiveTableEmpty = (cb) => {
+  try {
+    db.get("SELECT COUNT(*) AS count FROM active", (err, row) => {
+      if (err) {
+        cb(err, null);
+      } else {
+        cb(null, row.count === 0);
+      }
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.insertActivationData = (activationData) => {
+  try {
+    const stmt = db.prepare(
+      "INSERT INTO active (code, isActive, expiryDate) VALUES (?, ?, ?)"
+    );
+    activationData.forEach((entry) => {
+      stmt.run(entry.code, entry.isActive, entry.expiryDate);
+    });
+    stmt.finalize();
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.updateActivationData = (activationData) => {
+  try {
+    db.serialize(() => {
+      const updateStmt = db.prepare(
+        `UPDATE active SET
+          code = ?,
+          isActive = ?,
+          expiryDate = ?
+        `
+      );
+      activationData.forEach((entry) => {
+        updateStmt.run(entry.code, entry.isActive, entry.expiryDate);
+        updateStmt.finalize();
+      });
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.setActivationData = (activationData) => {
+  try {
+    this.isActiveTableEmpty((err, isEmpty) => {
+      if (err) {
+        console.log(err);
+        throw err;
+      } else {
+        if (isEmpty) {
+          this.insertActivationData(activationData);
+        } else {
+          this.updateActivationData(activationData);
+        }
+      }
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.getActivationData = async () => {
+  try {
+    return new Promise((resolve, reject) => {
+      db.all("SELECT * FROM active", (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    });
+  } catch (err) {
+    throw err;
+  }
+};

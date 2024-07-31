@@ -7,6 +7,7 @@ process.env.NODE_ENV = "dev";
 const isDev = process.env.NODE_ENV !== "production" ? true : false;
 
 dbController.dbInit(app);
+dbController.createActivationTable();
 dbController.createConfigTable();
 
 let mainWindow;
@@ -90,6 +91,19 @@ const menu = [
 ];
 
 ipcController.setConfigs();
+ipcController.isActiveApp();
+ipcController.restartApp();
+
+if (ipcController.isRunningInVM()) {
+  app.quit();
+} else {
+  ipcController.checkForVMProcesses((isVm) => {
+    if (isVm) {
+      console.log("Detected VM environment. Exiting application.");
+      app.quit();
+    }
+  });
+}
 
 app.on("ready", () => {
   createMainWindow();
@@ -99,7 +113,9 @@ app.on("ready", () => {
     mainWindow.webContents.openDevTools();
   }
   mainWindow.on("close", (e) => {
-    e.preventDefault();
     app.quit();
   });
 });
+
+// activation
+// icon and tray

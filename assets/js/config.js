@@ -25,7 +25,8 @@ const setConfiguration = () => {
     },
   ];
   ipcRenderer.send("set_configs", { configData: configs });
-  alert("configuration saved");
+  alert("configuration saved, quitting application");
+  ipcRenderer.send("restart_app");
   window.close();
 };
 
