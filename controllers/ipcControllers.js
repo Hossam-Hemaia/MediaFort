@@ -1,7 +1,9 @@
 const { ipcMain, app } = require("electron");
-const dbController = require("../controllers/dbControllers");
 const os = require("os");
 const { exec } = require("child_process");
+
+const dbController = require("../controllers/dbControllers");
+const utilities = require("../utils/utilities");
 
 exports.isRunningInVM = () => {
   const vmMacAddresses = [
@@ -50,6 +52,40 @@ exports.checkForVMProcesses = (callback) => {
   });
 };
 
+exports.activateApp = () => {
+  ipcMain.on("activation_success", (e, data) => {
+    activationData = [
+      {
+        code: utilities.encryption(data.code),
+        isActive: 1,
+        expiryDate: utilities.encryption(data.expiryDate),
+      },
+    ];
+    dbController.setActivationData;
+  });
+};
+
+exports.checkActivation = (activationData) => {
+  try {
+    if (activationData.length > 0) {
+      const dateNow = Date.now();
+      const date = new Date(dateNow);
+      const expiryDate = new Date(activationData[0].expiryDate);
+      const expiryTime = new Date(expiryDate).setHours(23, 0, 0, 0);
+      const endDate = new Date(expiryTime);
+      if (activationData[0].isActive === 1 && date < endDate) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
 exports.setConfigs = () => {
   ipcMain.on("set_configs", async (e, data) => {
     const configData = data.configData;
@@ -80,6 +116,24 @@ exports.isActiveApp = () => {
       username = row.username;
     });
     e.sender.send("is_active", { host, username });
+  });
+};
+
+exports.encryptData = () => {
+  try {
+    ipcMain.on("encrypt_data", (e, data) => {
+      const encrypted = utilities.encryption(data.text);
+      e.sender.send("data_encrypted", { encrypted });
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.decryptdata = () => {
+  ipcMain.on("decrypt_data", (e, data) => {
+    let decrypted = utilities.decryption(data.encUrl);
+    e.sender.send("data_decrypted", { decrypted });
   });
 };
 

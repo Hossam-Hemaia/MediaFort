@@ -6,8 +6,27 @@ let db;
 exports.dbInit = (app) => {
   try {
     const dbPath = path.join(app.getPath("userData"), "config.db");
-    db = new sqlite.Database(dbPath);
-    db.run("PRAGMA key = 'inTheNameOfAllahTheMostGraciousTheMostMerciful';");
+    db = new sqlite.Database(
+      dbPath,
+      sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE,
+      (err) => {
+        if (err) {
+          throw err;
+        }
+
+        // This line is intended to encrypt the database
+        db.run(
+          "PRAGMA key = 'inTheNameOfAllahTheMostGraciousTheMostMerciful';",
+          (err) => {
+            if (err) {
+              console.error("Failed to set encryption key:", err);
+            } else {
+              console.log("Database encrypted successfully.");
+            }
+          }
+        );
+      }
+    );
   } catch (err) {
     throw err;
   }

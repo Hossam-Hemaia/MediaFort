@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "media player for protecting content",
   "main": "app.js",
+  "build": {
+    "appId": "com.gooprint.app",
+    "productName": "Goo-Print",
+    "target": "NSIS",
+    "icon": "assets/icons/fort.ico"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",

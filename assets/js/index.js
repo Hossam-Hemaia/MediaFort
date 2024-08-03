@@ -1,4 +1,5 @@
 const { ipcRenderer } = require("electron");
+const utilities = require("../../utils/utilities");
 
 const videoElement = document.getElementById("vdoplyr");
 
@@ -9,17 +10,21 @@ ipcRenderer.send("get_isActive");
 
 ipcRenderer.on("is_active", (e, data) => {
   host = data.host;
-  username = data.username;
+  username = utilities.decryption(data.username);
 });
 
 setTimeout(() => {
-  const socket = io(host, { transports: ["websocket", "polling"] });
+  const socket = io(process.env.HOST, { transports: ["websocket", "polling"] });
   socket.on("connect", () => {
     alert("Socket connected to server");
   });
   socket.emit("send_video");
   socket.on(`${username}`, (ev) => {
-    let vidUrl = ev.url;
-    videoElement.src = vidUrl;
+    let encUrl = ev.url;
+    ipcRenderer.send("decrypt_data", { encUrl });
   });
 }, 2000);
+
+ipcRenderer.on("data_decrypted", (e, data) => {
+  videoElement.src = data.decrypted;
+});

@@ -1,5 +1,8 @@
+const path = require("path");
 const { app, BrowserWindow, Menu, Tray } = require("electron");
+const dotenv = require("dotenv");
 
+dotenv.config();
 const dbController = require("./controllers/dbControllers");
 const ipcController = require("./controllers/ipcControllers");
 
@@ -23,6 +26,7 @@ function createMainWindow() {
       nodeIntegration: true,
       contextIsolation: false,
     },
+    icon: path.join(__dirname, "assets", "icons", "fort.png"),
   });
   mainWindow.loadFile("./assets/html/index.html");
   mainWindow.setContentProtection(true);
@@ -37,6 +41,7 @@ function createConfigWindow() {
       nodeIntegration: true,
       contextIsolation: false,
     },
+    icon: path.join(__dirname, "assets", "icons", "fort.png"),
   });
   configWindow.loadFile("./assets/html/config.html");
   ipcController.getConfigs();
@@ -51,6 +56,7 @@ function createActivationWindow() {
       nodeIntegration: true,
       contextIsolation: false,
     },
+    icon: path.join(__dirname, "assets", "icons", "fort.png"),
   });
   activationWindow.loadFile("./assets/html/activation.html");
 }
@@ -90,8 +96,23 @@ const menu = [
     : []),
 ];
 
-ipcController.setConfigs();
-ipcController.isActiveApp();
+async function getApplicationIsActive() {
+  const activationData = await dbController.getActivationData();
+  const isActivated = ipcController.checkActivation(activationData);
+  if (isActivated) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+ipcController.encryptData();
+ipcController.activateApp();
+if (getApplicationIsActive) {
+  ipcController.setConfigs();
+  ipcController.isActiveApp();
+  ipcController.decryptdata();
+}
 ipcController.restartApp();
 
 if (ipcController.isRunningInVM()) {
@@ -105,17 +126,55 @@ if (ipcController.isRunningInVM()) {
   });
 }
 
-app.on("ready", () => {
-  createMainWindow();
-  const mainMenu = Menu.buildFromTemplate(menu);
-  Menu.setApplicationMenu(mainMenu);
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-  }
-  mainWindow.on("close", (e) => {
-    app.quit();
+const getTheLock = app.requestSingleInstanceLock();
+if (!getTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", (event, argv, workingDirectory) => {
+    // If the user tries to start a second instance, focus the main window if it's open
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
   });
-});
+  app.on("ready", () => {
+    createMainWindow();
+    const mainMenu = Menu.buildFromTemplate(menu);
+    Menu.setApplicationMenu(mainMenu);
+    if (isDev) {
+      mainWindow.webContents.openDevTools();
+    }
+    const icon = path.join(__dirname, "assets", "icons", "fort.png");
+    let tray = new Tray(icon);
+    tray.on("click", () => {
+      if (mainWindow.isVisible()) {
+        mainWindow.hide();
+      } else {
+        mainWindow.show();
+      }
+    });
+    tray.on("right-click", () => {
+      const contextMenu = Menu.buildFromTemplate([
+        {
+          label: "Quit",
+          click: () => {
+            app.isQuitting = true;
+            app.quit();
+          },
+        },
+      ]);
+      tray.popUpContextMenu(contextMenu);
+    });
+    mainWindow.on("close", (e) => {
+      app.quit();
+    });
+  });
+}
 
+app.on("window-all-closed", function () {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
 // activation
 // icon and tray

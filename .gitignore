@@ -1,3 +1,4 @@
 node_modules
 bundles.mp4
 git_push.sh
+.env

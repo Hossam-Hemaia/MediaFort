@@ -1,4 +1,5 @@
 const { ipcRenderer } = require("electron");
+const utilities = require("../../utils/utilities");
 
 const getConfigurations = () => {
   ipcRenderer.send("get_configs");
@@ -9,8 +10,8 @@ getConfigurations();
 ipcRenderer.on("config_data", (e, data) => {
   const hostInput = document.querySelector("[name=host]");
   const usernameInput = document.querySelector("[name=username]");
-  let host = data.host;
-  let username = data.username;
+  let host = utilities.decryption(data.host);
+  let username = utilities.decryption(data.username);
   hostInput.value = host;
   usernameInput.value = username;
 });
@@ -20,8 +21,8 @@ const setConfiguration = () => {
   const username = document.querySelector("[name=username]").value;
   const configs = [
     {
-      host,
-      username,
+      host: utilities.encryption(host),
+      username: utilities.encryption(username),
     },
   ];
   ipcRenderer.send("set_configs", { configData: configs });
