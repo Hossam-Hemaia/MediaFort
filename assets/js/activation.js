@@ -8,7 +8,7 @@ const sendActivationCode = (activationCode, endUser) => {
       activationCode,
       endUser,
     };
-    const url = "http://localhost:5120/api/v1/activate/code";
+    const url = "https://mediafort.kportals.net/api/v1/activate/code";
     const config = {
       method: "POST",
       body: JSON.stringify(data),

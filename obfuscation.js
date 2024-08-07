@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const JavaScriptObfuscator = require("javascript-obfuscator");
 
-const sourceDir = path.join(__dirname, "src"); // Replace with your source directory
-const outputDir = path.join(__dirname, "dist"); // Replace with your output directory
+const sourceDir = path.join(__dirname, "assets"); // Replace with your source directory
+const outputDir = path.join(__dirname, "obfuscated", "assets"); // Replace with your output directory
 
 function obfuscateFile(filePath, outputFilePath) {
   const fileContent = fs.readFileSync(filePath, "utf8");

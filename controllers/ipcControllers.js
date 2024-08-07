@@ -2,7 +2,7 @@ const { ipcMain, app } = require("electron");
 const os = require("os");
 const { exec } = require("child_process");
 
-const dbController = require("../controllers/dbControllers");
+const dbController = require("./dbControllers");
 const utilities = require("../utils/utilities");
 
 exports.isRunningInVM = () => {

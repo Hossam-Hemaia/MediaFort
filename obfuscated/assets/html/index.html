@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' 'unsafe-inline' https://cdn.socket.io;"
+    />
+    <title>Media Fort</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #121212;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+      }
+      video {
+        border: 5px solid #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Media Fort</h1>
+    <video
+      src="../../bundles.mp4"
+      width="1080"
+      height="684"
+      controls
+      autoplay
+      loop
+      preload="auto"
+      crossorigin="anonymous"
+      controlslist="nodownload noremoteplayback"
+      id="vdoplyr"
+    ></video>
+    <script
+      src="https://cdn.socket.io/4.7.3/socket.io.min.js"
+      integrity="sha384-+miq58Ltmjm+SSP5g8Ok6dpMO/6R4n8xe/x1Yj0Bdb9kiEz25LTnWv/GZQTRQamg"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../js/index.js"></script>
+  </body>
+</html>
