@@ -2,12 +2,13 @@ const { ipcRenderer } = require("electron");
 
 const activationBtn = document.getElementById("actvat");
 
-const sendActivationCode = (code) => {
+const sendActivationCode = (activationCode, endUser) => {
   try {
     const data = {
-      code,
+      activationCode,
+      endUser,
     };
-    const url = "https://activespyprint.gooadmin.com/api/v1/activate/code";
+    const url = "http://localhost:5120/api/v1/activate/code";
     const config = {
       method: "POST",
       body: JSON.stringify(data),
@@ -21,8 +22,9 @@ const sendActivationCode = (code) => {
       })
       .then((result) => {
         if (result.success) {
+          console.log(result);
           ipcRenderer.send("activation_success", {
-            code,
+            activationCode,
             expiryDate: result.expiryDate,
           });
           alert("Activation success");
@@ -40,5 +42,6 @@ const sendActivationCode = (code) => {
 
 activationBtn.addEventListener("click", () => {
   const acitvationCode = document.getElementById("actvcd").value;
-  sendActivationCode(acitvationCode);
+  const endUser = document.getElementById("usr").value;
+  sendActivationCode(acitvationCode, endUser);
 });

@@ -9,12 +9,12 @@ let username;
 ipcRenderer.send("get_isActive");
 
 ipcRenderer.on("is_active", (e, data) => {
-  host = data.host;
+  host = process.env.HOST;
   username = utilities.decryption(data.username);
 });
 
 setTimeout(() => {
-  const socket = io(process.env.HOST, { transports: ["websocket", "polling"] });
+  const socket = io(host, { transports: ["websocket", "polling"] });
   socket.on("connect", () => {
     alert("Socket connected to server");
   });
@@ -27,4 +27,9 @@ setTimeout(() => {
 
 ipcRenderer.on("data_decrypted", (e, data) => {
   videoElement.src = data.decrypted;
+});
+
+ipcRenderer.on("error", (e, data) => {
+  alert(data.message);
+  videoElement.src = "";
 });

@@ -6,7 +6,7 @@ dotenv.config();
 const dbController = require("./controllers/dbControllers");
 const ipcController = require("./controllers/ipcControllers");
 
-process.env.NODE_ENV = "dev";
+process.env.NODE_ENV = "production";
 const isDev = process.env.NODE_ENV !== "production" ? true : false;
 
 dbController.dbInit(app);

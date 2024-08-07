@@ -54,14 +54,14 @@ exports.checkForVMProcesses = (callback) => {
 
 exports.activateApp = () => {
   ipcMain.on("activation_success", (e, data) => {
-    activationData = [
+    let activationData = [
       {
-        code: utilities.encryption(data.code),
+        code: utilities.encryption(data.activationCode),
         isActive: 1,
         expiryDate: utilities.encryption(data.expiryDate),
       },
     ];
-    dbController.setActivationData;
+    dbController.setActivationData(activationData);
   });
 };
 
@@ -108,14 +108,27 @@ exports.getConfigs = () => {
 
 exports.isActiveApp = () => {
   ipcMain.on("get_isActive", async (e) => {
-    const configData = await dbController.getConfigData();
-    let host;
-    let username;
-    configData.forEach((row) => {
-      host = row.host;
-      username = row.username;
-    });
-    e.sender.send("is_active", { host, username });
+    const activationData = await dbController.getActivationData();
+    const activeData = [
+      {
+        code: utilities.decryption(activationData[0].code),
+        isActive: activationData[0].isActive,
+        expiryDate: utilities.decryption(activationData[0].expiryDate),
+      },
+    ];
+    const isActiveApp = this.checkActivation(activeData);
+    if (isActiveApp) {
+      const configData = await dbController.getConfigData();
+      let host;
+      let username;
+      configData.forEach((row) => {
+        host = row.host;
+        username = row.username;
+      });
+      e.sender.send("is_active", { host, username });
+    } else {
+      e.sender.send("error", { message: "Application is not activated!" });
+    }
   });
 };
 

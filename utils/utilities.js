@@ -21,3 +21,12 @@ exports.decryption = (text) => {
   decrypted += decipher.final("utf8");
   return decrypted;
 };
+
+exports.getLocalDate = (date) => {
+  const dateBegin = new Date(date).setHours(0, 0, 0, 0);
+  const newDate = new Date(dateBegin);
+  const localDate = new Date(
+    newDate.getTime() - newDate.getTimezoneOffset() * 60000
+  );
+  return localDate;
+};

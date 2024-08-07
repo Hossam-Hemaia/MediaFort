@@ -21,6 +21,7 @@
   "devDependencies": {
     "electron": "^31.3.0",
     "electron-builder": "^24.13.3",
+    "javascript-obfuscator": "^4.1.1",
     "nodemon": "^3.1.4"
   },
   "dependencies": {
