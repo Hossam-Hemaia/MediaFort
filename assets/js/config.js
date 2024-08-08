@@ -1,5 +1,5 @@
 const { ipcRenderer } = require("electron");
-const utilities = require("../../utils/utilities");
+const utilities = require("../../source/utils/utilities");
 
 const getConfigurations = () => {
   ipcRenderer.send("get_configs");
