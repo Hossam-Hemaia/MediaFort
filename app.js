@@ -13,7 +13,7 @@ function checkOS() {
     app.quit();
   }
 }
-checkOS();
+// checkOS();
 
 const dbController = require("./controllers/dbControllers");
 const ipcController = require("./controllers/ipcControllers");

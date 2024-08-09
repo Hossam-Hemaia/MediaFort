@@ -4,8 +4,8 @@
   "description": "media player for protecting content",
   "main": "app.js",
   "build": {
-    "appId": "com.gooprint.app",
-    "productName": "Goo-Print",
+    "appId": "com.mediafort.app",
+    "productName": "MediaFort",
     "target": "NSIS",
     "icon": "assets/icons/fort.ico"
   },
