@@ -122,7 +122,11 @@ exports.isActiveApp = () => {
         host = row.host;
         username = row.username;
       });
-      e.sender.send("is_active", { host, username });
+      e.sender.send("is_active", {
+        host,
+        username,
+        expiryDate: activeData[0].expiryDate,
+      });
     } else {
       e.sender.send("error", { message: "Application is not activated!" });
     }

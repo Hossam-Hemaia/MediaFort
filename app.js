@@ -1,11 +1,25 @@
 const path = require("path");
-const { app, BrowserWindow, Menu, Tray } = require("electron");
+const { app, BrowserWindow, Menu, Tray, ipcMain, dialog } = require("electron");
+const os = require("os");
+
+function checkOS() {
+  const platform = os.platform();
+
+  if (platform !== "win32") {
+    dialog.showErrorBox(
+      "Unsupported Operating System",
+      "This application can only run on Windows."
+    );
+    app.quit();
+  }
+}
+checkOS();
 
 const dbController = require("./controllers/dbControllers");
 const ipcController = require("./controllers/ipcControllers");
 const utilities = require("./utils/utilities");
 
-process.env.NODE_ENV = "dev";
+process.env.NODE_ENV = "production";
 process.env.HOST = "wss://mediafort.kportals.net";
 const isDev = process.env.NODE_ENV !== "production" ? true : false;
 
@@ -118,7 +132,12 @@ ipcController.activateApp();
 if (getApplicationIsActive()) {
   ipcController.setConfigs();
   ipcController.isActiveApp();
-  ipcController.decryptdata();
+  ipcMain.on("wake_up", (e) => {
+    if (!mainWindow.isVisible()) {
+      mainWindow.show();
+    }
+  });
+  ipcController.decryptdata(mainWindow);
 }
 ipcController.restartApp();
 
