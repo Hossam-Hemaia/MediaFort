@@ -1,12 +1,12 @@
 const path = require("path");
 const { app, BrowserWindow, Menu, Tray } = require("electron");
-const dotenv = require("dotenv");
 
-dotenv.config();
 const dbController = require("./controllers/dbControllers");
 const ipcController = require("./controllers/ipcControllers");
+const utilities = require("./utils/utilities");
 
-process.env.NODE_ENV = "production";
+process.env.NODE_ENV = "dev";
+process.env.HOST = "wss://mediafort.kportals.net";
 const isDev = process.env.NODE_ENV !== "production" ? true : false;
 
 dbController.dbInit(app);
@@ -98,7 +98,14 @@ const menu = [
 
 async function getApplicationIsActive() {
   const activationData = await dbController.getActivationData();
-  const isActivated = ipcController.checkActivation(activationData);
+  const activeData = [
+    {
+      code: utilities.decryption(activationData[0].code),
+      isActive: activationData[0].isActive,
+      expiryDate: utilities.decryption(activationData[0].expiryDate),
+    },
+  ];
+  const isActivated = ipcController.checkActivation(activeData);
   if (isActivated) {
     return true;
   } else {
@@ -108,7 +115,7 @@ async function getApplicationIsActive() {
 
 ipcController.encryptData();
 ipcController.activateApp();
-if (getApplicationIsActive) {
+if (getApplicationIsActive()) {
   ipcController.setConfigs();
   ipcController.isActiveApp();
   ipcController.decryptdata();

@@ -71,8 +71,7 @@ exports.checkActivation = (activationData) => {
       const dateNow = Date.now();
       const date = new Date(dateNow);
       const expiryDate = new Date(activationData[0].expiryDate);
-      const expiryTime = new Date(expiryDate).setHours(23, 0, 0, 0);
-      const endDate = new Date(expiryTime);
+      const endDate = new Date(expiryDate);
       if (activationData[0].isActive === 1 && date < endDate) {
         return true;
       } else {
@@ -96,13 +95,11 @@ exports.setConfigs = () => {
 exports.getConfigs = () => {
   ipcMain.on("get_configs", async (e) => {
     const configData = await dbController.getConfigData();
-    let host;
     let username;
     configData.forEach((row) => {
-      host = row.host;
       username = row.username;
     });
-    e.sender.send("config_data", { host, username });
+    e.sender.send("config_data", { username });
   });
 };
 

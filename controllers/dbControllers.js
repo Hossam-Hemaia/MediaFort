@@ -46,7 +46,6 @@ exports.createConfigTable = () => {
   try {
     db.serialize(() => {
       db.run(`CREATE TABLE IF NOT EXISTS config (
-        host TEXT,
         username TEXT
       )`);
     });
@@ -72,11 +71,9 @@ exports.isTableEmpty = (cb) => {
 
 exports.insertConfigData = (configData) => {
   try {
-    const stmt = db.prepare(
-      "INSERT INTO config (host, username) VALUES (?, ?)"
-    );
+    const stmt = db.prepare("INSERT INTO config (username) VALUES (?)");
     configData.forEach((entry) => {
-      stmt.run(entry.host, entry.username);
+      stmt.run(entry.username);
     });
     stmt.finalize();
     console.log("Data inserted into table.");
@@ -88,11 +85,10 @@ exports.insertConfigData = (configData) => {
 exports.updateConfigData = (configData) => {
   try {
     db.serialize(() => {
-      const updateStmt = db.prepare(`UPDATE config SET 
-      host = ?,
+      const updateStmt = db.prepare(`UPDATE config SET
       username = ?`);
       configData.forEach((entry) => {
-        updateStmt.run(entry.host, entry.username);
+        updateStmt.run(entry.username);
       });
       updateStmt.finalize();
     });

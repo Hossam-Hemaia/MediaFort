@@ -18,9 +18,10 @@ setTimeout(() => {
   socket.on("connect", () => {
     alert("Socket connected to server");
   });
-  socket.emit("send_video");
+  socket.emit("update_socket", { username: username });
   socket.on(`${username}`, (ev) => {
     let encUrl = ev.url;
+    console.log(encUrl);
     ipcRenderer.send("decrypt_data", { encUrl });
   });
 }, 2000);
