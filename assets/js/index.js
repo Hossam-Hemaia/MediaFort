@@ -35,6 +35,7 @@ setTimeout(() => {
     let encUrl = ev.url;
     ipcRenderer.send("wake_up");
     ipcRenderer.send("decrypt_data", { encUrl });
+    socket.emit("ack", { status: "ok" });
   });
   socket.on("disconnect", () => {
     statusIndicator.style.backgroundColor = "red";
