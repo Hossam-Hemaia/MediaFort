@@ -31,11 +31,11 @@ setTimeout(() => {
     statusText.textContent = "Connected";
     alert("Socket connected to server");
   });
-  socket.on(`${username}`, (ev) => {
+  socket.on(`${username}`, (ev, ack) => {
     let encUrl = ev.url;
     ipcRenderer.send("wake_up");
     ipcRenderer.send("decrypt_data", { encUrl });
-    socket.emit("ack", { status: "ok" });
+    ack({ status: "ok" });
   });
   socket.on("disconnect", () => {
     statusIndicator.style.backgroundColor = "red";
