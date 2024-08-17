@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Activation</title>
+    <title>Configurations</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -16,27 +16,30 @@
         height: 100vh;
         margin: 0;
       }
-      .activation {
+      .configs {
         background-color: #1e1e1e;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         width: 300px;
-        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
       label {
         display: block;
         margin-bottom: 10px;
         font-size: 1.2rem;
+        text-align: center;
       }
       input[type="text"] {
-        width: 94%;
+        width: 100%;
         padding: 10px;
         margin-bottom: 20px;
-        margin-right: 10px;
         border: none;
         border-radius: 5px;
         font-size: 1rem;
+        text-align: center;
       }
       button {
         padding: 10px 20px;
@@ -54,18 +57,23 @@
     </style>
   </head>
   <body>
-    <div class="activation">
-      <!-- <label for="activationCode">كود التفعيل</label>
+    <div class="configs">
+      <!-- <label for="host">Host Url</label>
       <input
         type="text"
-        name="activationCode"
-        id="actvcd"
-        placeholder="Activation Code"
+        name="host"
+        id="hostUrl"
+        placeholder="https://your-domain.com or wss://your-domain.com"
       /> -->
-      <label for="activationCode">ادخل رقم التليفون</label>
-      <input type="text" name="username" id="usr" placeholder="Phone Number" />
-      <button type="button" id="actvat">تفعيل</button>
+      <label for="username">Username</label>
+      <input
+        type="text"
+        name="username"
+        id="usr"
+        placeholder="Enter your username"
+      />
+      <button type="button" id="savCnfg">Save</button>
     </div>
-    <script src="../js/activation.js"></script>
+    <script src="../js/config.js"></script>
   </body>
 </html>

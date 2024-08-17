@@ -4,6 +4,10 @@ const utilities = require("../../utils/utilities");
 const videoElement = document.getElementById("vdoplyr");
 const usernameOutput = document.getElementById("usrshw");
 const expiryDateOutput = document.getElementById("xpryshw");
+const statusIndicator = document.getElementById("statusIndicator");
+const statusText = document.getElementById("statusText");
+statusIndicator.style.backgroundColor = "red";
+statusText.textContent = "Disconnected";
 
 let host;
 let username;
@@ -23,12 +27,18 @@ setTimeout(() => {
   const socket = io(host, { transports: ["websocket", "polling"] });
   socket.on("connect", () => {
     socket.emit("update_socket", { username: username });
+    statusIndicator.style.backgroundColor = "green";
+    statusText.textContent = "Connected";
     alert("Socket connected to server");
   });
   socket.on(`${username}`, (ev) => {
     let encUrl = ev.url;
     ipcRenderer.send("wake_up");
     ipcRenderer.send("decrypt_data", { encUrl });
+  });
+  socket.on("disconnect", () => {
+    statusIndicator.style.backgroundColor = "red";
+    statusText.textContent = "Disconnected";
   });
 }, 2000);
 

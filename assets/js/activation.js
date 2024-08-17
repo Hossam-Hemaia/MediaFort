@@ -2,10 +2,10 @@ const { ipcRenderer } = require("electron");
 
 const activationBtn = document.getElementById("actvat");
 
-const sendActivationCode = (activationCode, endUser) => {
+const sendActivationCode = (endUser) => {
   try {
     const data = {
-      activationCode,
+      activationCode: "RrV1-VI2N",
       endUser,
     };
     const url = "https://mediafort.kportals.net/api/v1/activate/code";
@@ -22,9 +22,8 @@ const sendActivationCode = (activationCode, endUser) => {
       })
       .then((result) => {
         if (result.success) {
-          console.log(result);
           ipcRenderer.send("activation_success", {
-            activationCode,
+            activationCode: "RrV1-VI2N",
             expiryDate: result.expiryDate,
           });
           alert("Activation success");
@@ -41,7 +40,7 @@ const sendActivationCode = (activationCode, endUser) => {
 };
 
 activationBtn.addEventListener("click", () => {
-  const acitvationCode = document.getElementById("actvcd").value;
+  //const acitvationCode = document.getElementById("actvcd").value;
   const endUser = document.getElementById("usr").value;
-  sendActivationCode(acitvationCode, endUser);
+  sendActivationCode(endUser);
 });
