@@ -3,6 +3,7 @@ const ytdl = require("@distube/ytdl-core");
 const utilities = require("../../utils/utilities");
 
 const videoElement = document.getElementById("vdoplyr");
+const videoSource = document.getElementById("vidSrc");
 const iframeElement = document.getElementById("ifrmplyr");
 const usernameOutput = document.getElementById("usrshw");
 const expiryDateOutput = document.getElementById("xpryshw");
@@ -20,117 +21,17 @@ let expiryDate;
 async function youtubeStreamer(youtubeUrl, video) {
   try {
     const info = await ytdl.getInfo(youtubeUrl);
-    // Choose the best available format with both video and audio
-    const format = ytdl.chooseFormat(info.formats, {
-      quality: "highest",
+    const videoFormat = ytdl.chooseFormat(info.formats, {
+      quality: "highestvideo",
       filter: (format) =>
-        format.container === "mp4" && format.hasAudio && format.hasVideo,
+        format.container === "mp4" && format.hasVideo && format.hasAudio,
     });
-    video.src = format.url;
-    // // Ensure the format contains both video and audio
-    // if (!format || !format.mimeType || !format.codecs) {
-    //   throw new Error(
-    //     "Could not find a suitable format with both audio and video."
-    //   );
-    // }
-
-    // const stream = ytdl(youtubeUrl, { format });
-
-    // const mediaSource = new MediaSource();
-    // video.src = URL.createObjectURL(mediaSource);
-
-    // mediaSource.addEventListener("sourceopen", () => {
-    //   // Properly format the mimeCodec string
-    //   const mimeCodec = `${format.mimeType}; codecs="${format.codecs}"`;
-    //   console.log("Using mimeCodec:", mimeCodec);
-
-    //   try {
-    //     const sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
-    //     const queue = [];
-    //     let appending = false;
-
-    //     function appendToSourceBuffer() {
-    //       if (
-    //         appending ||
-    //         queue.length === 0 ||
-    //         mediaSource.readyState !== "open"
-    //       ) {
-    //         return;
-    //       }
-
-    //       appending = true;
-    //       const chunk = queue.shift();
-
-    //       if (sourceBuffer.updating) {
-    //         queue.unshift(chunk); // Put the chunk back if the buffer is still updating
-    //       } else {
-    //         try {
-    //           sourceBuffer.appendBuffer(new Uint8Array(chunk));
-    //         } catch (error) {
-    //           console.error("Error appending buffer:", error);
-    //         }
-    //       }
-    //     }
-
-    //     // Listen to the updateend event to append the next chunk
-    //     sourceBuffer.addEventListener("updateend", () => {
-    //       appending = false;
-    //       appendToSourceBuffer(); // Append next chunk if any
-    //     });
-
-    //     // Handle SourceBuffer errors
-    //     sourceBuffer.addEventListener("error", (err) => {
-    //       console.error("SourceBuffer error:", err);
-    //       // Close the media source if there's an error
-    //       if (mediaSource.readyState === "open") {
-    //         try {
-    //           mediaSource.endOfStream("decode");
-    //         } catch (e) {
-    //           console.error("Error during endOfStream:", e);
-    //         }
-    //       }
-    //     });
-
-    //     // Collect chunks and append them to the queue
-    //     stream.on("data", (chunk) => {
-    //       console.log("Received data chunk");
-    //       queue.push(chunk);
-    //       appendToSourceBuffer();
-    //     });
-
-    //     // Handle stream end
-    //     stream.on("end", () => {
-    //       console.log("Stream ended");
-    //       if (mediaSource.readyState === "open" && !sourceBuffer.updating) {
-    //         try {
-    //           mediaSource.endOfStream();
-    //           video.play();
-    //         } catch (err) {
-    //           console.error("Error ending media stream:", err);
-    //         }
-    //       }
-    //     });
-
-    //     // Handle stream errors
-    //     stream.on("error", (err) => {
-    //       console.error("Stream error:", err);
-    //       if (mediaSource.readyState === "open") {
-    //         mediaSource.endOfStream("decode");
-    //       }
-    //     });
-    //   } catch (err) {
-    //     console.error("Error adding SourceBuffer:", err);
-    //   }
-    // });
-
-    // // Handle MediaSource errors
-    // mediaSource.addEventListener("error", (err) => {
-    //   console.error("MediaSource error:", err);
-    // });
+    video.src = videoFormat.url;
   } catch (err) {
     console.error("Error in youtubeStreamer:", err);
   }
 }
+
 ipcRenderer.send("get_isActive");
 
 ipcRenderer.on("is_active", (e, data) => {
