@@ -25,6 +25,8 @@
     "nodemon": "^3.1.4"
   },
   "dependencies": {
-    "sqlite3": "^5.1.6"
+    "@distube/ytdl-core": "^4.14.4",
+    "sqlite3": "^5.1.6",
+    "youtube-stream-url": "^2.4.3"
   }
 }

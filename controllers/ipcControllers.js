@@ -147,7 +147,7 @@ exports.encryptData = () => {
 exports.decryptdata = () => {
   ipcMain.on("decrypt_data", (e, data) => {
     let decrypted = utilities.decryption(data.encUrl);
-    e.sender.send("data_decrypted", { decrypted });
+    e.sender.send("data_decrypted", { decrypted, sourceType: data.sourceType });
   });
 };
 

@@ -31,25 +31,26 @@
       }
       .info {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row; /* Change from column to row */
+        align-items: center; /* Center align items vertically */
+        justify-content: space-between; /* Space elements evenly */
         width: 100%;
         max-width: 1080px;
         margin-bottom: 10px;
       }
       .info label {
         font-size: 0.75rem;
-        margin-top: 10px;
+        margin-right: 10px; /* Adjust margin to space out elements horizontally */
       }
       .info output {
         font-size: 0.75rem;
-        margin-left: 10px;
+        margin-right: 20px; /* Adjust margin to space out elements horizontally */
         font-weight: bold;
       }
       .status {
         display: flex;
         align-items: center;
-        margin-top: 10px;
+        margin-left: 20px; /* Add margin to separate from previous elements */
       }
       .status .indicator {
         width: 10px;
@@ -61,22 +62,32 @@
       .status span {
         font-size: 0.75rem;
       }
-      video {
+      video,
+      iframe {
+        /* Apply same styling to both video and iframe */
         border: 5px solid #ffffff;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         max-width: 100%;
         height: 75%;
       }
+      iframe {
+        width: 1080px; /* Set specific width for iframe */
+        height: 684px; /* Set specific height for iframe */
+      }
     </style>
   </head>
   <body>
     <h1>Media Fort</h1>
     <div class="info">
-      <label for="usrshw">Username:</label>
-      <output id="usrshw"></output>
-      <label for="xpryshw">Expiry Date:</label>
-      <output id="xpryshw"></output>
+      <div>
+        <label for="usrshw">Username:</label>
+        <output id="usrshw"></output>
+      </div>
+      <div>
+        <label for="xpryshw">Expiry Date:</label>
+        <output id="xpryshw"></output>
+      </div>
       <div class="status">
         <div class="indicator" id="statusIndicator"></div>
         <span id="statusText">Disconnected</span>
@@ -94,6 +105,13 @@
       controlslist="nodownload noremoteplayback"
       id="vdoplyr"
     ></video>
+    <iframe
+      id="ifrmplyr"
+      src=""
+      frameborder="0"
+      allowfullscreen
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    ></iframe>
     <script
       src="https://cdn.socket.io/4.7.3/socket.io.min.js"
       integrity="sha384-+miq58Ltmjm+SSP5g8Ok6dpMO/6R4n8xe/x1Yj0Bdb9kiEz25LTnWv/GZQTRQamg"
