@@ -39,6 +39,7 @@ ipcRenderer.on("is_active", (e, data) => {
   username = utilities.decryption(data.username);
   expiryDate = data.expiryDate;
   usernameOutput.innerText = username;
+  watermark.innerText = username;
   expiryDateOutput.innerText = new Date(expiryDate).toLocaleDateString();
 });
 
@@ -82,4 +83,32 @@ ipcRenderer.on("data_decrypted", async (e, data) => {
 ipcRenderer.on("error", (e, data) => {
   alert(data.message);
   videoElement.src = "";
+});
+
+const watermark = document.getElementById("watermark");
+watermark.innerText = username;
+function moveWatermark() {
+  const videoRect = videoElement.getBoundingClientRect(); // Get video element size and position
+  const watermarkWidth = watermark.offsetWidth;
+  const watermarkHeight = watermark.offsetHeight;
+
+  // Calculate available space within video for watermark movement
+  const maxX = videoRect.width - watermarkWidth; // Maximum X position
+  const maxY = videoRect.height - watermarkHeight; // Maximum Y position
+
+  // Generate random positions within the video element
+  const randomX = Math.random() * maxX;
+  const randomY = Math.random() * maxY;
+
+  // Update watermark position relative to video element
+  watermark.style.left = `${videoRect.left + randomX}px`;
+  watermark.style.top = `${videoRect.top + randomY}px`;
+}
+setInterval(moveWatermark, 10000); // Move every 10 seconds
+document.addEventListener("fullscreenchange", (event) => {
+  if (document.fullscreenElement) {
+    watermark.classList.add("fullscreen");
+  } else {
+    watermark.classList.remove("fullscreen");
+  }
 });

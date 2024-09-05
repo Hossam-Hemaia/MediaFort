@@ -22,36 +22,43 @@
         justify-content: center;
         height: 100vh;
         box-sizing: border-box;
+        position: relative; /* Added for watermark positioning */
       }
+
       h1 {
         font-size: 1.5rem;
         margin-top: 20px;
         text-align: center;
         flex-shrink: 0;
       }
+
       .info {
         display: flex;
-        flex-direction: row; /* Change from column to row */
-        align-items: center; /* Center align items vertically */
-        justify-content: space-between; /* Space elements evenly */
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
         width: 100%;
         max-width: 1080px;
         margin-bottom: 10px;
       }
+
       .info label {
         font-size: 0.75rem;
-        margin-right: 10px; /* Adjust margin to space out elements horizontally */
+        margin-right: 10px;
       }
+
       .info output {
         font-size: 0.75rem;
-        margin-right: 20px; /* Adjust margin to space out elements horizontally */
+        margin-right: 20px;
         font-weight: bold;
       }
+
       .status {
         display: flex;
         align-items: center;
-        margin-left: 20px; /* Add margin to separate from previous elements */
+        margin-left: 20px;
       }
+
       .status .indicator {
         width: 10px;
         height: 10px;
@@ -59,21 +66,40 @@
         background-color: red;
         margin-right: 5px;
       }
+
       .status span {
         font-size: 0.75rem;
       }
       video,
       iframe {
-        /* Apply same styling to both video and iframe */
         border: 5px solid #ffffff;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         max-width: 100%;
-        height: 75%;
+        height: 100%;
       }
+
       iframe {
-        width: 1080px; /* Set specific width for iframe */
-        height: 684px; /* Set specific height for iframe */
+        width: 1080px;
+        height: 684px;
+      }
+
+      /* Watermark styling */
+      .watermark {
+        position: absolute;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.2); /* Semi-transparent */
+        pointer-events: none; /* Prevent interaction */
+        z-index: 9999;
+      }
+
+      .fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
       }
     </style>
   </head>
@@ -105,6 +131,9 @@
       controlslist="nodownload noremoteplayback"
       id="vdoplyr"
     ></video>
+
+    <!-- Watermark for the username -->
+    <div id="watermark" class="watermark">Username</div>
     <iframe
       id="ifrmplyr"
       src=""
