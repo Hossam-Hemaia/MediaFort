@@ -150,7 +150,22 @@ if (ipcController.isRunningInVM()) {
       app.quit();
     }
   });
+  ipcController.checkForSharingProcesses((isSharing) => {
+    if (isSharing) {
+      console.log("Screen sharing software detected.");
+      app.quit();
+    }
+  });
 }
+
+setInterval(() => {
+  ipcController.checkForSharingProcesses((isSharing) => {
+    if (isSharing) {
+      console.log("Screen sharing software detected.");
+      app.quit();
+    }
+  });
+}, 300000);
 
 const getTheLock = app.requestSingleInstanceLock();
 if (!getTheLock) {

@@ -4,6 +4,7 @@ const { exec } = require("child_process");
 
 const dbController = require("./dbControllers");
 const utilities = require("../utils/utilities");
+const { stdout, stderr } = require("process");
 
 exports.isRunningInVM = () => {
   const vmMacAddresses = [
@@ -50,6 +51,36 @@ exports.checkForVMProcesses = (callback) => {
 
     callback(vmIndicators.some((indicator) => output.includes(indicator)));
   });
+};
+
+exports.checkForSharingProcesses = (callback) => {
+  try {
+    const screenSharingProcesses = [
+      "spacedeskService.exe",
+      "Miracast.exe",
+      "AirPlay.exe",
+      "Sidecar.exe",
+    ];
+    exec("tasklist", (err, stdout, stderr) => {
+      if (err) {
+        console.error("Error running tasklist command", err);
+        callback(false);
+        return;
+      }
+      const isScreenSharingRunning = screenSharingProcesses.some((process) =>
+        stdout.includes(process)
+      );
+      if (isScreenSharingRunning) {
+        console.log(
+          "Screen sharing software detected, preventing application from opening."
+        );
+        // Here you can exit the application or show a warning to the user
+        callback(true);
+      }
+    });
+  } catch (err) {
+    throw err;
+  }
 };
 
 exports.activateApp = () => {
